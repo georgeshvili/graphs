@@ -1,5 +1,6 @@
 package graph_a;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -112,40 +113,24 @@ public class graph_a {
         System.out.println(); 
     }
 	
-	public int findMin(int[] mas1, Queue<Integer> queue) {
-		int min = ((LinkedList<Integer>)queue).get(0);
-		
-		for(int j = 0; j < queue.size(); j++) {
-			if(mas1[((LinkedList<Integer>)queue).get(j)] < mas1[min]) {
-				min = ((LinkedList<Integer>)queue).get(j);
-			}
-		}
-		return min;
-	}
-	
 	public void dijkstra (int s) {
 		
 		int[] rast = new int[size];
-		Queue<Integer> queue = new LinkedList<>();
+		boolean[] isVisited = new boolean[size];
 		
 		Arrays.fill(rast, Integer.MAX_VALUE);
-		
-		for(int i = 0; i < size; i++) {
-			queue.add(i);
-		}
+		Arrays.fill(isVisited, false);
 		
 		rast[s] = 0;
 		
-		while(queue.size() != 0) {
-			int v = findMin(rast,queue);
-			queue.remove(v);
-			
-			for(int i = 0; i < size; i++) {
-					if(rast[i] > rast[v] + weights[v][i] && weights[v][i] != 0) {
-						if(rast[i] == Integer.MAX_VALUE) {
-							rast[i] = rast[v] + weights[v][i];
-						}
-					}
+		while(!isEverythingVisited(isVisited)) {
+			int v = findMin(rast, isVisited);
+			isVisited[v] = true;
+			for(int i = 0; i < list[v].size(); i++) {
+				int u = list[v].get(i);
+				if(rast[u] > rast[v] + weights[v][u]) {
+					rast[u] = rast[v] + weights[v][u];
+				}
 			}
 		}
 
